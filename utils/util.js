@@ -15,7 +15,37 @@ function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
 }
-function dbSearch(data, sccuess_func, fail_func){
+function fetch_photo(data,success_func,fail_func){
+  wx.request({
+    url: 'https://m.douban.com/j/fetch_photo',
+    data: data,
+    header: {
+      'content-type': 'application/json'
+    },
+    success: function (res) {
+      //console.log(res)
+      var result = {}
+      if (res.statusCode == 200) {
+        for(var i in res.data.photos){
+          var idreg = /photo\/(.*?)\?type/
+          //console.log(idreg.exec(res.data.photos[i]['url']))
+          res.data.photos[i].id = idreg.exec(res.data.photos[i]['url'])[1];
+        }
+        typeof success_func == "function" && success_func(res.data)
+      } else {
+        //豆瓣报500
+        result['errMsg'] = 'db:fail';
+        typeof fail_func == "function" && fail_func(result)
+      }
+
+
+    }, fail: function (err) {
+      //连接 请求失败，豆瓣服务器宕机等
+      typeof fail_func == "function" && fail_func(err)
+    }
+  })
+}
+function dbSearch(data, success_func, fail_func){
   wx.request({
     url: 'https://m.douban.com/j/search',
     data: data,
@@ -53,7 +83,7 @@ function dbSearch(data, sccuess_func, fail_func){
         result['data'] = list;
         result['count'] = count;
         result['limit'] = limit;
-        typeof sccuess_func == "function" && sccuess_func(result)
+        typeof success_func == "function" && success_func(result)
       }else{
         //豆瓣报500
         result['errMsg'] = 'db:fail'; 
@@ -70,5 +100,6 @@ function dbSearch(data, sccuess_func, fail_func){
 
 module.exports = {
   formatTime: formatTime,
-  dbSearch: dbSearch
+  dbSearch: dbSearch,
+  fetch_photo: fetch_photo
 }
