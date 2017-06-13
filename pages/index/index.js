@@ -108,6 +108,38 @@ Page({
     console.log('生命周期:explore-load')
     var that = this;
     this.initData();
+    wx.request({
+      url: 'https://m.douban.com/j/search/?q=%E7%A5%9E%E5%A5%87&t=movie&p=0',
+      data: {},
+      header: {
+        'content-type': 'application/json'
+      },
+      success: function (res) {
+        console.log(res.data)
+        var html = res.data.html;
+        html = html.replace(/<!--[\s\S]*?-->/g, '');  //去除html注释
+        html = html.replace(/>\s+([^\s<]*)\s+</g, '>$1<').trim();  //去除html标签间的多余空白
+        console.log(html);
+        var reg = /<li>(.*?)<\/li>/g;
+        var items;
+        while ((items = reg.exec(html))){
+          var li = items[1];
+          var idreg = /href="\/movie\/subject\/(.*?)\/"/
+          var imgreg = /<img src="(.*?)"/
+          var namereg = /<span class="subject-title">(.*?)<\/span>/
+          var ratereg = /data-rating="(.*?)"/
+
+          var id = idreg.exec(li)[1];
+          var img = imgreg.exec(li)[1];
+          var name = namereg.exec(li)[1];
+          var rate = parseFloat(ratereg.exec(li)[1])/10;
+
+          console.log(rate)
+        }  
+        
+        
+      }
+    })
   },
   onReady: function () {
     console.log('生命周期:explore-ready');
