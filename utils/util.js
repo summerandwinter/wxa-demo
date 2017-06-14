@@ -45,6 +45,118 @@ function fetch_photo(data,success_func,fail_func){
     }
   })
 }
+function parseLyric(lrc) {
+  var lyrics = lrc.split("\n");
+  var lrcArr = [];
+  for (var i = 0; i < lyrics.length; i++) {
+    var lyric = decodeURIComponent(lyrics[i]);
+    var timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
+    var timeRegExpArr = lyric.match(timeReg);
+    if (!timeRegExpArr) continue;
+    var clause = lyric.replace(timeReg, '');
+    if(clause.length>0)
+      lrcArr.push(clause);
+    //console.log(clause);
+   
+  }
+  return lrcArr;
+}
+/**
+ * 
+ * 获取播放key：http://base.music.qq.com/fcgi-bin/fcg_musicexpress.fcg?json=3&loginUin={0}&format=jsonp&inCharset=GB2312&outCharset=GB2312&notice=0&platform=yqq&needNewCode=0
+ * {0}=默认为0,是登录的QQ号ID
+ * 返回
+ * jsonCallback({"code":0,"sip"["http://ws.stream.qqmusic.qq.com/","http://cc.stream.qqmusic.qq.com/" "http://124.14.15.19/streamoc.music.tc.qq.com/"
+"key":"6BFDD0DFE8A88C65E5D7942967AE84A1F7BC2A96A9120C15A5032483EA5D0659"})
+ * key=6BFDD0DFE8A88C65E5D7942967AE84A1F7BC2A96A9120C15A5032483EA5D0659
+ * 播放歌曲API：http://cc.stream.qqmusic.qq.com/C200{0}.m4a?vkey={1}&fromtag=0
+ * {0}=song_mid
+ * {1}=上面取到的KEY
+
+例子：http://cc.stream.qqmusic.qq.com/C200001Js78a40BZU6.m4a?vkey=6BFDD0DFE8A88C65E5D7942967AE84A1F7BC2A96A9120C15A5032483EA5D0659&fromtag=0
+
+
+ */
+function get_key(){
+
+}
+
+function search_qq_music(){
+  var url = 'http://s.music.qq.com/fcgi-bin/music_search_new_platform?t=0&n=5&aggr=1&cr=1&loginUin=0&format=json&inCharset=GB2312&outCharset=utf-8&notice=0&platform=jqminiframe.json&needNewCode=0&p=1&catZhida=0&remoteplace=sizer.newclient.next_song&w=周杰伦';
+
+  wx.request({
+    url: url,
+    data: {},
+    header: {
+      'content-type': 'application/json'
+    },
+    success: function (res) {
+      //console.log(res)
+      var result = {}
+      if (res.statusCode == 200) {
+
+        var json = res.data;
+        if(json.code == 0){
+          var songs = json.data.song.list;
+          for(var i in songs){
+            var data = {};            
+            var fs = songs[i]['f'].split("|");
+            /**
+             * 歌曲图片API：http://imgcache.qq.com/music/photo/mid_album_90/{1}/{2}/{0}.jpg
+
+{0}=album_mid
+
+{1]=album_mid的倒数第二个字符
+
+{2}=album_mid的最后一个字符
+
+例子：http://imgcache.qq.com/music/photo/mid_album_90/I/D/001uqejs3d6EID.jpg
+             * 
+             */
+            var big = '300x300'; //68,90,300,500
+            var thumb = '68x68';
+            data['song_id'] = fs[0];
+            data['song_name'] = fs[1];
+            data['singer_id'] = fs[2];
+            data['singer_name'] = fs[3];
+            data['album_id'] = fs[4];
+            data['album_name'] = fs[5];
+            
+            data['song_mid'] = fs[20];           
+            data['singer_mid'] = fs[21];
+            data['album_mid'] = fs[22];
+            data['album_cover'] = 'https://y.gtimg.cn/music/photo_new/T002R' + big + 'M000' + data['album_mid'] + '.jpg';
+            data['singer_cover'] = 'https://y.gtimg.cn/music/photo_new/T001R' + big + 'M000' + data['singer_mid'] + '.jpg';
+            console.log(data);
+          }
+          //console.log(songs)
+
+        }else{
+          console.log("接口返回错误")
+        }
+        
+
+
+      }
+
+
+    }, fail: function (err) {
+      //连接 请求失败，豆瓣服务器宕机等
+      typeof fail_func == "function" && fail_func(err)
+    }
+  })
+}
+/**
+ * 歌词API：http://music.qq.com/miniportal/static/lyric/{1}/{0}.xml
+
+{0}=上面取到的Lrc
+
+{1}=上面取到的Lrc%100
+
+例子：http://music.qq.com/miniportal/static/lyric/14/101369814.xml
+
+这个LRC有时会失效的
+ */
 function getLyric(){
   wx.request({
     url: 'http://music.qq.com/miniportal/static/lyric/24/4829324.xml',
@@ -56,10 +168,17 @@ function getLyric(){
       //console.log(res)
       var result = {}
       if (res.statusCode == 200) {
-        console.log(res.data)
+        
         var html = res.data;
-        var reg = /[CDATA[(.*?)]]/g;
-        console.log(reg.exec(html));
+        html = html.replace(/>\s+([^\s<]*)\s+</g, '>$1<').trim();
+        //console.log(html)
+        var reg = /\[CDATA\[([\W\w]*?)\]\]/g;
+        var lyrics = reg.exec(html);
+        if (lyrics && lyrics.length == 2){
+          var content = lyrics[1]
+          var result= parseLyric(content)
+          console.log(result);
+        }
 
       }
 
@@ -128,5 +247,6 @@ module.exports = {
   formatTime: formatTime,
   dbSearch: dbSearch,
   fetch_photo: fetch_photo,
-  getLyric: getLyric
+  getLyric: getLyric,
+  search_qq_music: search_qq_music
 }

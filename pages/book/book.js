@@ -51,7 +51,7 @@ Page({
   initData: function () {
     var that = this;
     that.setData({'loading.hidden':true,'creater.hidden':false});
-    util.getLyric();
+    util.search_qq_music();
 
   },
   onLoad: function () {
