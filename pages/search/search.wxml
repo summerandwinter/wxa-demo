@@ -1,4 +1,3 @@
-
 <!--selection.wxml-->
 <view class="container">
   <view class="nav" wx:if="{{cates.length > 0}}">
@@ -22,18 +21,19 @@
       </view>
     </view>
   </view>
-  <view  class="content" hidden="{{info.hidden}}">
+  <view class="content" hidden="{{info.hidden}}">
     <view class="item" wx:for="{{info.list}}" wx:key="{{id}}" bindtap="tap" data-id="{{item.id}}">
       <image class="item-photo" src="{{item.img}}" background-size="cover"></image>
       <text class="item-title">{{item.name}}</text>
     </view>
-    <view class="loadmore" hidden="{{!isLoading}}">
-      <view class="loadmore-loading" style=""></view>
-      <view class="loadmore-tips">正在加载</view>
-    </view>
-    <view class="loadmore loadmore-line" hidden="{{info.hasMore}}">
-      <view class="loadmore-tips">已经到底了</view>
-    </view>
+
+  </view>
+  <view class="loadmore" hidden="{{!isLoading}}">
+    <view class="loadmore-loading" style=""></view>
+    <view class="loadmore-tips">正在加载</view>
+  </view>
+  <view class="loadmore loadmore-line" hidden="{{info.hasMore}}">
+    <view class="loadmore-tips">已经到底了</view>
   </view>
   <view class="slogan" hidden="{{slogan.hidden}}">{{slogan.word}}</view>
 </view>

@@ -4,8 +4,8 @@ var app = getApp()
 Page({
   data: {
     slogan: 'solgan',
-    query:'神奇',
-    type:'movie',
+    query:'悟空传',
+    type:'book', //movie book
     loading: {
       hidden: false
     },
@@ -53,6 +53,8 @@ Page({
     //console.log(e)
   },loadMore:function(){
     var that = this;
+    if(!that.data.info.hasMore)
+      return;
     var q = that.data.query, t = that.data.type, p = that.data.info.page;
     var data = { q: q, t: t, p: p }
     that.setData({'isLoading':true});

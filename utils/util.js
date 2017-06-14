@@ -45,6 +45,31 @@ function fetch_photo(data,success_func,fail_func){
     }
   })
 }
+function getLyric(){
+  wx.request({
+    url: 'http://music.qq.com/miniportal/static/lyric/24/4829324.xml',
+    data: {},
+    header: {
+      'content-type': 'application/json'
+    },
+    success: function (res) {
+      //console.log(res)
+      var result = {}
+      if (res.statusCode == 200) {
+        console.log(res.data)
+        var html = res.data;
+        var reg = /[CDATA[(.*?)]]/g;
+        console.log(reg.exec(html));
+
+      }
+
+
+    }, fail: function (err) {
+      //连接 请求失败，豆瓣服务器宕机等
+      typeof fail_func == "function" && fail_func(err)
+    }
+  })
+}
 function dbSearch(data, success_func, fail_func){
   wx.request({
     url: 'https://m.douban.com/j/search',
@@ -61,13 +86,14 @@ function dbSearch(data, success_func, fail_func){
         var html = res.data.html;
         html = html.replace(/<!--[\s\S]*?-->/g, '');  //去除html注释
         html = html.replace(/>\s+([^\s<]*)\s+</g, '>$1<').trim();  //去除html标签间的多余空白
-        //console.log(html);
+        console.log(html);
         var reg = /<li>(.*?)<\/li>/g;
         var items;
         var list = []
         while ((items = reg.exec(html))) {
+          console.log(items);
           var li = items[1];
-          var idreg = /href="\/movie\/subject\/(.*?)\/"/
+          var idreg = /href=".*\/subject\/(.*?)\/"/
           var imgreg = /<img src="(.*?)"/
           var namereg = /<span class="subject-title">(.*?)<\/span>/
           var ratereg = /data-rating="(.*?)"/
@@ -101,5 +127,6 @@ function dbSearch(data, success_func, fail_func){
 module.exports = {
   formatTime: formatTime,
   dbSearch: dbSearch,
-  fetch_photo: fetch_photo
+  fetch_photo: fetch_photo,
+  getLyric: getLyric
 }

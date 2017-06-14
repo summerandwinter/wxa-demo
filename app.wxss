@@ -1,11 +1,11 @@
 /**app.wxss**/
 @font-face {
   font-family: 'iconfont';  /* project id 295262 */
-  src: url('//at.alicdn.com/t/font_kx9pk0c4mxg06bt9.eot');
-  src: url('//at.alicdn.com/t/font_kx9pk0c4mxg06bt9.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_kx9pk0c4mxg06bt9.woff') format('woff'),
-  url('//at.alicdn.com/t/font_kx9pk0c4mxg06bt9.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_kx9pk0c4mxg06bt9.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_gx4dg5i4i06enrk9.eot');
+  src: url('//at.alicdn.com/t/font_gx4dg5i4i06enrk9.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_gx4dg5i4i06enrk9.woff') format('woff'),
+  url('//at.alicdn.com/t/font_gx4dg5i4i06enrk9.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_gx4dg5i4i06enrk9.svg#iconfont') format('svg');
 }
 .iconfont {
   font-family:"iconfont" !important;
@@ -21,8 +21,10 @@
 .icon-photo:before { content: "\e603"; }
 .icon-more:before { content: "\e625"; }
 .icon-submit:before { content: "\e609"; }
-
-
+.icon-save:before { content: "\e604"; }
+.icon-preview:before { content: "\e602"; }
+.icon-image:before { content: "\e633"; }
+.icon-camera:before { content: "\e62a"; }
 .slogan {
   position: fixed;
   font-size: 8pt;
