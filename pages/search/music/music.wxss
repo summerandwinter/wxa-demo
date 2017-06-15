@@ -15,7 +15,7 @@ page {
 
 .content {
   width: 750rpx;
-  margin: 0 auto;
+  margin: 46px auto 0;
   height: 100%;
   background: #eee;
   display: flex;
@@ -126,7 +126,7 @@ page {
   padding: 8px 10px;
   display: flex;
   box-sizing: border-box;
-  background-color: #efeff4;
+  background-color: #fff;
 }
 
 .weui-search-bar:before {
@@ -136,7 +136,7 @@ page {
   top: 0;
   right: 0;
   height: 1px;
-  border-top: 1px solid #d7d6dc;
+  border-top: 1px solid #fff;
   color: #d7d6dc;
   -webkit-transform-origin: 0 0;
   transform-origin: 0 0;

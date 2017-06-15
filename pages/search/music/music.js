@@ -8,7 +8,8 @@ Page({
     },
     nodata:false,
     slogan: 'solgan',
-    query:'屋顶',
+    query:'王菲',
+    keyword:'王菲',
     limit:10, 
     loading: {
       hidden: false
@@ -83,7 +84,7 @@ Page({
         var hasMore = count > limit * (p + 1)
         that.setData({
           'info.page': 2,
-          'query': q,
+          'keyword': q,
           'info.hasMore': hasMore,
           'loading.hidden': true,
           'info.list': data.list,
@@ -91,7 +92,7 @@ Page({
         })
       }else{
         that.setData({
-          'query': q,
+          'keyword': q,
           'nodata':true,
           'info.hasMore': true,
           'loading.hidden': true,
@@ -120,7 +121,9 @@ Page({
     var that = this;
     if(!that.data.info.hasMore)
       return;
-    var q = that.data.query, limit = that.data.limit, p = that.data.info.page;
+    var q = that.data.keyword, limit = that.data.limit, p = that.data.info.page;
+    if(q.length == 0)
+      return;
     var data = { q: q, l: limit, p: p }
     that.setData({'isLoading':true});
     util.search_qq_music(data, function (data) {
@@ -142,7 +145,7 @@ Page({
   },
   initData: function () {
     var that = this;
-    var q = that.data.query, limit = that.data.limit, p = 1;
+    var q = that.data.keyword, limit = that.data.limit, p = 1;
     var data = { q: q, l: limit, p: p }
     util.search_qq_music(data, function (data) {
       console.log(data);
@@ -164,12 +167,14 @@ Page({
   onLoad: function () {
     console.log('生命周期:explore-load')
     var that = this;
+    /*
     that.setData({
       'info.hasMore': true,
       'loading.hidden': true,
       'info.hidden': false
     })
-    //that.initData();
+    */
+    that.initData();
 
   },
   onReady: function () {

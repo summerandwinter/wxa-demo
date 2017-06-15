@@ -1,66 +1,76 @@
-// pages/create/music/music.js
+//explore.js
+var util = require('../../../utils/util.js')
+var app = getApp()
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-  
+    slogan: 'solgan',
+    id: 1003000,
+    pid: 0,
+    cover: 'https://y.gtimg.cn/music/photo_new/T002R300x300M000003y8dsH2wBHlo.jpg',
+    name: '绅士',
+    loading: {
+      hidden: false
+    },
+    creater: {
+      hidden: false,
+    },
+    userInfo: {},
+    cates: [],
+    isLoading: false,
+    uploader: { hidden: false },
+    preview: { hidden: true }
   },
+  tap: function (e) {
+    var id = e.currentTarget.dataset.id;
+    console.log('点击卡片' + id);
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-  
   },
+  touchstart: function (e) {
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
+  },
+  touchmove: function (e) {
+
+  },
+  touchcancel: function (e) {
+
+  },
+  touchend: function (e) {
+
+  },
+  onPullDownRefresh: function (e) {
+    console.log(e);
+    var that = this;
+    wx.stopPullDownRefresh();
+  },
+  onReachBottom: function (e) {
+    var that = this;
+  },
+  scroll: function (e) {
+    //console.log(e)
+  },
+  initData: function () {
+    var that = this;
+    that.setData({ 'loading.hidden': true, 'creater.hidden': false });
+    util.search_qq_music();
+
+  },
+  onLoad: function () {
+    console.log('生命周期:explore-load')
+    var that = this;
+    that.initData();
+
+  },
   onReady: function () {
-  
+    console.log('生命周期:explore-ready');
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow: function () {
-  
-  },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
+    console.log('生命周期:explore-show');
+  },
   onHide: function () {
-  
+    console.log('生命周期:explore-hide');
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
   onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
+    console.log('生命周期:explore-unload');
   }
 })

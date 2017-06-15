@@ -1,2 +1,55 @@
-<!--pages/create/music/music.wxml-->
-<text>pages/create/music/music.wxml</text>
+<!--selection.wxml-->
+<view class="container">
+  <view class="nav" wx:if="{{cates.length > 0}}">
+    <view class="nav-item" wx:for="{{cates}}" wx:key="id">
+      <block wx:if="{{index == 0}}">
+        <view class="tab selected">{{item.name}}</view>
+      </block>
+      <block wx:else>
+        <view class="tab">{{item.name}}</view>
+      </block>
+    </view>
+  </view>
+  <view class="data-loading" hidden="{{loading.hidden}}">
+    <view class="loading-container">
+      <view class="sk-wave">
+        <view class="sk-rect sk-rect1"></view>
+        <view class="sk-rect sk-rect2"></view>
+        <view class="sk-rect sk-rect3"></view>
+        <view class="sk-rect sk-rect4"></view>
+        <view class="sk-rect sk-rect5"></view>
+      </view>
+    </view>
+  </view>
+  <view class="creater" hidden="{{creater.hidden}}">
+    <form bindsubmit="formSubmit" report-submit="true">
+      <view class="banner"></view>
+      <view class="cover-container">
+        <image class="cover" src="{{cover}}" mode="aspectFill" />
+      </view>
+      <view class="title">{{name}}</view>
+      <view class="author">薛之谦</view>
+      <view class="info-conainter">
+        <view class="editor">
+          <textarea name="content" value="其实台下的观众就我一个\n其实我也看出你有点不舍\n场景也习惯我们来回拉扯\n还计较着什么\n其实说分不开的也不见得\n其实感情最怕的就是拖着\n越演到重场戏越哭不出了" class="text" placeholder-class="text-placeholder" placeholder="可以填入你喜欢的电影台词或者是对电影的感悟" auto-height="true" />
+        </view>
+      </view>
+
+      <view class="toolbar">
+        <view class="toolbar-item" bindtap="preview">
+          <view class="iconfont icon-preview"></view>
+          <view class="option-tip">预览</view>
+        </view>
+        <view class="toolbar-item" bindtap="publish">
+          <view class="iconfont icon-submit"></view>
+          <view class="option-tip">投稿</view>
+        </view>
+        <view class="toolbar-item" bindtap="save">
+          <view class="iconfont icon-save"></view>
+          <view class="option-tip">保存</view>
+        </view>
+      </view>
+    </form>
+  </view>
+  <view class="slogan" hidden="{{slogan.hidden}}">{{slogan.word}}</view>
+</view>
