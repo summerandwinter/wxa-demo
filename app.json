@@ -1,10 +1,12 @@
 {
   "pages": [
-    "pages/book/book",
-    "pages/search/search",
-    "pages/create/create",   
-    "pages/index/index",
-    "pages/logs/logs"
+    "pages/search/music/music",
+    "pages/search/movie/movie",
+    "pages/search/book/book",
+    "pages/create/book/book",    
+    "pages/create/movie/movie",
+    "pages/create/music/music",   
+    "pages/index/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

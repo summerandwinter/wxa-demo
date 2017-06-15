@@ -1,5 +1,5 @@
 //explore.js
-var util = require('../../utils/util.js')
+var util = require('../../../utils/util.js')
 var app = getApp()
 Page({
   data: {
@@ -100,7 +100,7 @@ Page({
   onLoad: function () {
     console.log('生命周期:explore-load')
     var that = this;
-    that.initData();
+    //that.initData();
 
   },
   onReady: function () {

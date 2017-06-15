@@ -15,7 +15,7 @@ function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
 }
-function fetch_photo(data,success_func,fail_func){
+function fetch_photo(data, success_func, fail_func) {
   wx.request({
     url: 'https://m.douban.com/j/fetch_photo',
     data: data,
@@ -26,7 +26,7 @@ function fetch_photo(data,success_func,fail_func){
       //console.log(res)
       var result = {}
       if (res.statusCode == 200) {
-        for(var i in res.data.photos){
+        for (var i in res.data.photos) {
           var idreg = /photo\/(.*?)\?type/
           //console.log(idreg.exec(res.data.photos[i]['url']))
           res.data.photos[i].id = idreg.exec(res.data.photos[i]['url'])[1];
@@ -54,10 +54,10 @@ function parseLyric(lrc) {
     var timeRegExpArr = lyric.match(timeReg);
     if (!timeRegExpArr) continue;
     var clause = lyric.replace(timeReg, '');
-    if(clause.length>0)
+    if (clause.length > 0)
       lrcArr.push(clause);
     //console.log(clause);
-   
+
   }
   return lrcArr;
 }
@@ -77,13 +77,13 @@ function parseLyric(lrc) {
 
 
  */
-function get_key(){
+function get_key() {
 
 }
 
-function search_qq_music(){
-  var url = 'http://s.music.qq.com/fcgi-bin/music_search_new_platform?t=0&n=5&aggr=1&cr=1&loginUin=0&format=json&inCharset=GB2312&outCharset=utf-8&notice=0&platform=jqminiframe.json&needNewCode=0&p=1&catZhida=0&remoteplace=sizer.newclient.next_song&w=周杰伦';
-
+function search_qq_music(data, success_func, fail_func) {
+  var url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp?g_tk=1462662066&uin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=h5&needNewCode=1&zhidaqu=0&catZhida=1&t=0&flag=1&ie=utf-8&sem=1&aggr=0&remoteplace=txt.mqq.al&p=' + data.p + '&n=' + data.l + '&w=' + data.q;
+  console.log(url);
   wx.request({
     url: url,
     data: {},
@@ -96,23 +96,85 @@ function search_qq_music(){
       if (res.statusCode == 200) {
 
         var json = res.data;
-        if(json.code == 0){
+        if (json.code == 0) {
+          //console.log(json.data.song);
+          result['curnum'] = json.data.song.curnum;
+          result['curpage'] = json.data.song.curpage;
+          result['totalnum'] = json.data.song.totalnum;
+          var dataList = [];
+          for (var i in json.data.song.list) {
+            var high = '500x500';
+            var medium = '300x300'; //68,90,300,500
+            var thumb = '68x68';
+            var albummid = json.data.song.list[i].albummid;
+            var cover = {};
+            cover['thumb'] = 'https://y.gtimg.cn/music/photo_new/T002R' + thumb + 'M000' + albummid+ '.jpg';
+            cover['medium'] = 'https://y.gtimg.cn/music/photo_new/T002R' + medium + 'M000' + albummid + '.jpg';
+            cover['high'] = 'https://y.gtimg.cn/music/photo_new/T002R' + high + 'M000' + albummid + '.jpg';
+            json.data.song.list[i]['cover'] = cover;
+            for (var j in json.data.song.list[i].singer){
+              var avatar = {}
+              avatar['thumb'] = 'https://y.gtimg.cn/music/photo_new/T001R' + thumb + 'M000' + albummid + '.jpg';
+              avatar['medium'] = 'https://y.gtimg.cn/music/photo_new/T001R' + medium + 'M000' + albummid + '.jpg';
+              avatar['high'] = 'https://y.gtimg.cn/music/photo_new/T001R' + high + 'M000' + albummid + '.jpg';
+              json.data.song.list[i].singer[j]['avatar'] = avatar;
+            }
+          }
+          //console.log(json.data.song);
+          typeof success_func == "function" && success_func(json.data.song);
+          //console.log(songs)
+
+        } else {
+          console.log("接口返回错误")
+          result['errMsg'] = 'qqmusic api:fail';
+          typeof fail_func == "function" && fail_func(result)
+        }
+      } else {
+        console.log("请求失败");
+        result['errMsg'] = 'qqmusic request:fail';
+        typeof fail_func == "function" && fail_func(result)
+      }
+
+
+    }, fail: function (err) {
+      //连接 请求失败，豆瓣服务器宕机等
+      typeof fail_func == "function" && fail_func(err)
+    }
+  })
+}
+/**
+* 歌曲图片API：http://imgcache.qq.com/music/photo/mid_album_90/{1}/{2}/{0}.jpg
+* {0}=album_mid
+* {1]=album_mid的倒数第二个字符
+* {2}=album_mid的最后一个字符
+* 例子：http://imgcache.qq.com/music/photo/mid_album_90/I/D/001uqejs3d6EID.jpg
+* 
+*/
+function search_qq_music2(data, success_func, fail_func) {
+  var url = 'http://s.music.qq.com/fcgi-bin/music_search_new_platform?loginUin=0&format=json&inCharset=utf-8&outCharset=utf-8&platform=jqminiframe.json&needNewCode=0&catZhida=0&remoteplace=sizer.newclient.next_song&p=' + data.p + '&n=' + data.l + '&w=' + data.q;
+  console.log(url);
+  wx.request({
+    url: url,
+    data: {},
+    header: {
+      'content-type': 'application/json'
+    },
+    success: function (res) {
+      //console.log(res)
+      var result = {}
+      if (res.statusCode == 200) {
+
+        var json = res.data;
+        if (json.code == 0) {
           var songs = json.data.song.list;
-          for(var i in songs){
-            var data = {};            
+          console.log(json.data.song);
+          result['curnum'] = json.data.song.curnum;
+          result['curpage'] = json.data.song.curpage;
+          result['totalnum'] = json.data.song.totalnum;
+          var dataList = [];
+          for (var i in songs) {
+            var data = {};
             var fs = songs[i]['f'].split("|");
-            /**
-             * 歌曲图片API：http://imgcache.qq.com/music/photo/mid_album_90/{1}/{2}/{0}.jpg
-
-{0}=album_mid
-
-{1]=album_mid的倒数第二个字符
-
-{2}=album_mid的最后一个字符
-
-例子：http://imgcache.qq.com/music/photo/mid_album_90/I/D/001uqejs3d6EID.jpg
-             * 
-             */
             var big = '300x300'; //68,90,300,500
             var thumb = '68x68';
             data['song_id'] = fs[0];
@@ -121,22 +183,27 @@ function search_qq_music(){
             data['singer_name'] = fs[3];
             data['album_id'] = fs[4];
             data['album_name'] = fs[5];
-            
-            data['song_mid'] = fs[20];           
+            data['song_mid'] = fs[20];
             data['singer_mid'] = fs[21];
             data['album_mid'] = fs[22];
             data['album_cover'] = 'https://y.gtimg.cn/music/photo_new/T002R' + big + 'M000' + data['album_mid'] + '.jpg';
             data['singer_cover'] = 'https://y.gtimg.cn/music/photo_new/T001R' + big + 'M000' + data['singer_mid'] + '.jpg';
-            console.log(data);
+            //console.log(data);
+            dataList.push(data)
           }
+          result['data'] = dataList;
+          typeof success_func == "function" && success_func(result);
           //console.log(songs)
 
-        }else{
+        } else {
           console.log("接口返回错误")
+          result['errMsg'] = 'qqmusic api:fail';
+          typeof fail_func == "function" && fail_func(result)
         }
-        
-
-
+      } else {
+        console.log("请求失败");
+        result['errMsg'] = 'qqmusic request:fail';
+        typeof fail_func == "function" && fail_func(result)
       }
 
 
@@ -157,7 +224,7 @@ function search_qq_music(){
 
 这个LRC有时会失效的
  */
-function getLyric(){
+function getLyric() {
   wx.request({
     url: 'http://music.qq.com/miniportal/static/lyric/24/4829324.xml',
     data: {},
@@ -168,15 +235,15 @@ function getLyric(){
       //console.log(res)
       var result = {}
       if (res.statusCode == 200) {
-        
+
         var html = res.data;
         html = html.replace(/>\s+([^\s<]*)\s+</g, '>$1<').trim();
         //console.log(html)
         var reg = /\[CDATA\[([\W\w]*?)\]\]/g;
         var lyrics = reg.exec(html);
-        if (lyrics && lyrics.length == 2){
+        if (lyrics && lyrics.length == 2) {
           var content = lyrics[1]
-          var result= parseLyric(content)
+          var result = parseLyric(content)
           console.log(result);
         }
 
@@ -189,7 +256,7 @@ function getLyric(){
     }
   })
 }
-function dbSearch(data, success_func, fail_func){
+function dbSearch(data, success_func, fail_func) {
   wx.request({
     url: 'https://m.douban.com/j/search',
     data: data,
@@ -199,7 +266,7 @@ function dbSearch(data, success_func, fail_func){
     success: function (res) {
       //console.log(res)
       var result = {}
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         var count = res.data.count;
         var limit = res.data.limit;
         var html = res.data.html;
@@ -216,11 +283,11 @@ function dbSearch(data, success_func, fail_func){
           var imgreg = /<img src="(.*?)"/
           var namereg = /<span class="subject-title">(.*?)<\/span>/
           var ratereg = /data-rating="(.*?)"/
-         
+
           var id = idreg.exec(li)[1];
           var img = imgreg.exec(li)[1];
           var name = namereg.exec(li)[1];
-          var rate = ratereg.exec(li)?(parseFloat(ratereg.exec(li)[1]) / 10):'无';
+          var rate = ratereg.exec(li) ? (parseFloat(ratereg.exec(li)[1]) / 10) : '无';
           var data = { 'id': id, 'img': img, 'name': name, 'rate': rate }
           list.push(data);
         }
@@ -229,14 +296,14 @@ function dbSearch(data, success_func, fail_func){
         result['count'] = count;
         result['limit'] = limit;
         typeof success_func == "function" && success_func(result)
-      }else{
+      } else {
         //豆瓣报500
-        result['errMsg'] = 'db:fail'; 
+        result['errMsg'] = 'db:fail';
         typeof fail_func == "function" && fail_func(result)
       }
-      
 
-    },fail:function(err){
+
+    }, fail: function (err) {
       //连接 请求失败，豆瓣服务器宕机等
       typeof fail_func == "function" && fail_func(err)
     }
