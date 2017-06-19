@@ -73,7 +73,7 @@ Page({
   search: function(e){
     console.log(e);
     var that = this;
-    var q = e.detail.value, limit = that.data.limit, p = that.data.info.page;
+    var q = e.detail.value, limit = that.data.limit, p = 1;
     if(q.length == 0)
       return;
     var data = { q: q, l: limit, p: p }

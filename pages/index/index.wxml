@@ -1,4 +1,3 @@
-
 <!--selection.wxml-->
 <view class="container">
   <view class="nav" wx:if="{{cates.length > 0}}">
@@ -22,30 +21,39 @@
       </view>
     </view>
   </view>
-  <view scroll-y="true" class="content{{cates.length > 0?' withNav':''}}" hidden="{{info.hidden}}"  bindscrolltolower="lower">
-    <view class="item" wx:for="{{info.list}}" wx:key="{{id}}" bindtap="tap" data-id="{{item.id}}">
-      <image class="item-photo" src="{{item.img_url}}" background-size="cover"></image>
-      <text class="item-title">{{item.name}}</text>
-      <text class="item-word">{{item.content}}</text>
-      <view class="item-meta">
-       <view class="meta-container">
-        <view class="userinfo">
-         <view class="avatar">
-         <image  src="{{item.user.avatarUrl}}"></image>
-         </view>
-         <view class="nickname">{{item.user.nickName}}</view>
+  <swiper vertical="true"   class="content{{cates.length > 0?' withNav':''}}" hidden="{{info.hidden}}" bindscrolltolower="lower">
+    <swiper-item class="item" wx:for="{{info.list}}" wx:key="{{id}}" bindtap="tap" data-id="{{item.id}}">
+      <view class="item-cover">
+        <image class="item-photo" src="{{item.img_url}}" background-size="cover"></image>
+      </view>
+      <view class="item-content">
+        <view class="item-title">
+          <text>{{item.name}}</text>
         </view>
-        <view class="time">{{item.time}}</view>
+        <view class="item-word">
+          <text>{{item.content}}</text>
         </view>
       </view>
-    </view>
-    <view class="loadmore" hidden="{{!isLoading}}">
+      <view class="item-meta">
+        <view class="meta-container">
+          <view class="userinfo">
+            <view class="avatar">
+              <image src="{{item.user.avatarUrl}}"></image>
+            </view>
+            <view class="nickname">{{item.user.nickName}}</view>
+          </view>
+          <view class="time">{{item.time}}</view>
+        </view>
+      </view>
+    </swiper-item>
+    
+</swiper>
+<view class="loadmore" hidden="{{!isLoading}}">
       <view class="loadmore-loading" style=""></view>
       <view class="loadmore-tips">正在加载</view>
     </view>
     <view class="loadmore loadmore-line" hidden="{{info.hasMore}}">
       <view class="loadmore-tips">已经到底了</view>
     </view>
-  </view>
-  <view class="slogan" hidden="{{slogan.hidden}}">{{slogan.word}}</view>
+<view class="slogan" hidden="{{slogan.hidden}}">{{slogan.word}}</view>
 </view>

@@ -1,14 +1,12 @@
 {
   "pages": [
+        "pages/index/index",
     "pages/create/music/music",
-    
     "pages/search/music/music",
     "pages/search/movie/movie",
     "pages/search/book/book",
     "pages/create/book/book",    
-    "pages/create/movie/movie",
-      
-    "pages/index/index"
+    "pages/create/movie/movie"
   ],
   "window": {
     "backgroundTextStyle": "light",

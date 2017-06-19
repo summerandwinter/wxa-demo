@@ -23,16 +23,35 @@
   </view>
   <view class="creater" hidden="{{creater.hidden}}">
     <form bindsubmit="formSubmit" report-submit="true">
-      <view class="banner"></view>
+      <view class="banner" bindtap="changeCover">
+        <view class="banner-inner" style="background-image: url({{cover}});"></view>
+        <view class="title">{{music.songname}}</view>
+      </view>
+
+      <view class="content-body">
+        <view class="author">
+        <block wx:for="{{music.singer}}" wx:for-index="idx" wx:for-item="singer" wx:key="{{id}}">
+          <text>{{singer.name}}</text>
+          <text wx:if="{{idx < music.singer.length-1}}">/</text>
+        </block>
+        </view>
+        <view class="info-container">
+          <view class="editor" >
+            <textarea name="content" value="{{content}}" class="text" placeholder-class="text-placeholder" placeholder="在这里填入你喜欢歌词" style="height:400rpx;"/>
+          </view>
+          <view class="lyric-contaner" hidden="true">
+            <view class="lxCheckboxGroup">
+              <view wx:for="{{items}}" data-index="{{index}}" size="20" bindtap="bindCheckbox">
+                <icon type="{{item.type}}" size="18" />
+                <text class="{{item.type}}">{{item.text}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+      </view>
       <view class="cover-container">
         <image class="cover" src="{{cover}}" mode="aspectFill" />
-      </view>
-      <view class="title">{{name}}</view>
-      <view class="author">薛之谦</view>
-      <view class="info-conainter">
-        <view class="editor">
-          <textarea name="content" value="其实台下的观众就我一个\n其实我也看出你有点不舍\n场景也习惯我们来回拉扯\n还计较着什么\n其实说分不开的也不见得\n其实感情最怕的就是拖着\n越演到重场戏越哭不出了" class="text" placeholder-class="text-placeholder" placeholder="可以填入你喜欢的电影台词或者是对电影的感悟" auto-height="true" />
-        </view>
       </view>
 
       <view class="toolbar">

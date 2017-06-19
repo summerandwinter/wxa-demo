@@ -48,14 +48,22 @@ function fetch_photo(data, success_func, fail_func) {
 function parseLyric(lrc) {
   var lyrics = lrc.split("\n");
   var lrcArr = [];
+  var index = 1;
   for (var i = 0; i < lyrics.length; i++) {
     var lyric = decodeURIComponent(lyrics[i]);
     var timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
     var timeRegExpArr = lyric.match(timeReg);
     if (!timeRegExpArr) continue;
     var clause = lyric.replace(timeReg, '');
-    if (clause.length > 0)
-      lrcArr.push(clause);
+    if (clause.length > 0){
+      var data = {}
+      data.index = index;
+      data.text = clause;
+      data.type = 'circle'
+      lrcArr.push(data);
+      index++;
+    }
+      
     //console.log(clause);
 
   }
@@ -112,12 +120,15 @@ function search_qq_music(data, success_func, fail_func) {
             cover['medium'] = 'https://y.gtimg.cn/music/photo_new/T002R' + medium + 'M000' + albummid + '.jpg';
             cover['high'] = 'https://y.gtimg.cn/music/photo_new/T002R' + high + 'M000' + albummid + '.jpg';
             json.data.song.list[i]['cover'] = cover;
+           
             for (var j in json.data.song.list[i].singer){
+              var singermid = json.data.song.list[i].singer.mid;
               var avatar = {}
               avatar['thumb'] = 'https://y.gtimg.cn/music/photo_new/T001R' + thumb + 'M000' + albummid + '.jpg';
               avatar['medium'] = 'https://y.gtimg.cn/music/photo_new/T001R' + medium + 'M000' + albummid + '.jpg';
               avatar['high'] = 'https://y.gtimg.cn/music/photo_new/T001R' + high + 'M000' + albummid + '.jpg';
               json.data.song.list[i].singer[j]['avatar'] = avatar;
+              console.log(JSON.stringify(json.data.song.list[i]));
             }
           }
           //console.log(json.data.song);
@@ -224,9 +235,9 @@ function search_qq_music2(data, success_func, fail_func) {
 
 这个LRC有时会失效的
  */
-function getLyric() {
+function getLyric(songid, success_func, fail_func) {
   wx.request({
-    url: 'http://music.qq.com/miniportal/static/lyric/24/4829324.xml',
+    url: 'http://music.qq.com/miniportal/static/lyric/'+(parseInt(songid)%100)+'/'+songid+'.xml',
     data: {},
     header: {
       'content-type': 'application/json'
@@ -244,7 +255,8 @@ function getLyric() {
         if (lyrics && lyrics.length == 2) {
           var content = lyrics[1]
           var result = parseLyric(content)
-          console.log(result);
+          //console.log(result);
+          typeof success_func == "function" && success_func(result)
         }
 
       }
