@@ -1,0 +1,11 @@
+<view class="loader-container">
+  <view class="loader">
+    <view class="stick"></view>
+    <view class="stick"></view>
+    <view class="stick"></view>
+    <view class="stick"></view>
+    <view class="stick"></view>
+    <view class="stick"></view>
+    <text>Loading</text>
+  </view>
+</view>
