@@ -38,7 +38,7 @@ Page({
 
   },
   onPullDownRefresh: function (e) {
-    console.log(e);
+    //console.log(e);
     var that = this;
     wx.stopPullDownRefresh();
   },
